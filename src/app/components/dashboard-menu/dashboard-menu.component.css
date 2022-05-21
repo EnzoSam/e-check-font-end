@@ -24,3 +24,14 @@
   justify-content: center;
   align-items: center;
 }
+
+#span-address
+{  
+  margin-left: auto;
+}
+
+#span-title
+{
+  width: auto;
+  margin-right: 15px;
+}

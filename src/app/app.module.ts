@@ -15,6 +15,7 @@ import { CheckSignComponent } from './components/check-sign/check-sign.component
 import { ChecksEmitedsComponent } from './components/checks-emiteds/checks-emiteds.component';
 import { CheckListComponent } from './components/check-list/check-list.component';
 import { Web3Service } from './services/web3.service';
+import { AddressComponent } from './components/address/address.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { Web3Service } from './services/web3.service';
     CheckEmitComponent,
     CheckSignComponent,
     ChecksEmitedsComponent,
-    CheckListComponent
+    CheckListComponent,
+    AddressComponent
   ],
   imports: [
     BrowserModule,

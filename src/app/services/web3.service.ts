@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import Web3 from 'web3';
 import { ICheck } from '../interfaces/icheck';
 import { Contract } from '../constants/global';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 var abi = require('ethereumjs-abi');
 
 
@@ -43,6 +43,11 @@ export class Web3Service {
     this.handleIdChainChange();
   }
 
+  onAdressChange(): Observable<string>
+  {
+    return this.addressUser.asObservable()
+  }
+
   async handleIdChainChange()
   {
     const chainId:string = await window.ethereum.request({method:'eth_chainId'});
@@ -56,7 +61,7 @@ export class Web3Service {
 
     window.ethereum.on('chainChanged',(res:string)=>
     {
-      if(this.chainIds.includes(res))
+      if(!this.chainIds.includes(res))
       {
         //red no contemplada
       }
@@ -72,7 +77,7 @@ export class Web3Service {
     this.addressUser.next(accounts[0]);
     console.log(this.addressUser.value);
 
-    window.ethereum.on('accountChanged',(accounts:string[])=>
+    window.ethereum.on('accountsChanged',(accounts:string[])=>
       {
         this.addressUser.next(accounts[0]);
         console.log(this.addressUser.value);
@@ -80,51 +85,10 @@ export class Web3Service {
   }
 
 
-
-  async initWeb311111() {
-    /*
-    try {
-      if (typeof window.ethereum !== undefined) {
-
-        console.log('window.ethereum !== undefined');
-        this.web3 = new Web3(window.ethereum);
-        console.log(window.ethereum);
-        await window.ethereum.enable();
-        console.log(this.web3.eth.accounts);
-        if(this.web3.eth.accounts.length > 0)
-        {
-          this.defaultAccount =this.web3.eth.accounts[0];
-          console.log(this.defaultAccount);
-        }
-      }      
-      else if(typeof window.web3 !== undefined){
-        console.log('window.ethereum == undefined');
-        this.web3Provider = window.web3.currentProvider;
-        this.web3 = new Web3( window.web3.currentProvider);
-        if(this.web3.eth.accounts.length > 0)
-        {
-          this.defaultAccount =this.web3.eth.accounts[0];
-          console.log(this.defaultAccount);
-        }
-      }
-      else
-      {
-        //no esta metamask
-      }
-
-      
-    }
-    catch (e) {
-      console.log(e);
-    }
-
-    */
-  }
-
   generateHash(check: ICheck) {
     let hash = "0x" + abi.soliditySHA3
       (["address", "uint256", "uint256", "address"],
-        [check.address, check.amount, check.number, Contract.address]);
+        [check.address, check.amount, check.number, Contract.address]).toString("hex");
 
     console.log(hash);
     return hash;
@@ -136,6 +100,7 @@ export class Web3Service {
     if (this.addressUser && this.addressUser.value) {
       this.web3.eth.personal.sign(hash, this.addressUser.value, (err: any, signature: any) => {
         console.log(signature);
+        alert(signature);
         return signature;
       });
     }
