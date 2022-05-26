@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import Web3 from 'web3';
-import { ICheck } from '../interfaces/icheck';
 import { Contract } from '../constants/global';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Check } from '../models/check.model';
 var abi = require('ethereumjs-abi');
 
 
@@ -25,22 +25,18 @@ export class Web3Service {
 
   constructor() {
 
-    this.initWeb3();
   }
 
-  async initWeb3() {
+  async connect()
+  {
+    console.log('conecting...');
     if (typeof window.ethereum !== undefined) {
       this.web3 = new Web3(window.ethereum);
-      this.connect();
+      this.handleIdChainChange();
     }
     else{
-      //no esta metamask
+      console.log('no esta metamask.');
     }
-  }
-
-  connect()
-  {
-    this.handleIdChainChange();
   }
 
   onAdressChange(): Observable<string>
@@ -85,23 +81,23 @@ export class Web3Service {
   }
 
 
-  generateHash(check: ICheck) {
+  generateHash(check: Check) {
     let hash = "0x" + abi.soliditySHA3
       (["address", "uint256", "uint256", "address"],
-        [check.address, check.amount, check.number, Contract.address]).toString("hex");
+        [check.recipient, check.amount, check.number, Contract.address]).toString("hex");
 
     console.log(hash);
     return hash;
   }
 
-  async signCheck(check: ICheck) {
-    //0xf9EFE64C0d8E11536BF4a903e80De48dAB9b13F1
+  async signCheck(check: Check) {
+    
     let hash = await this.generateHash(check);
+
     if (this.addressUser && this.addressUser.value) {
-      this.web3.eth.personal.sign(hash, this.addressUser.value, (err: any, signature: any) => {
-        console.log(signature);
-        alert(signature);
-        return signature;
+      await this.web3.eth.personal.sign(hash, this.addressUser.value, (err: any, signature: any) => {
+        check.signer = this.addressUser.value;
+        check.signature = signature;        
       });
     }
   }

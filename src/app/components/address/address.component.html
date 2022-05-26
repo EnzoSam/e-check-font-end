@@ -1,3 +1,4 @@
 <mat-chip-list>
-    <mat-chip color="accent" selected>{{address}}</mat-chip>
+    <mat-chip *ngIf="address" color="accent" selected>{{address}}</mat-chip>
+    <mat-chip *ngIf="!address" color="accent" selected (click)="connect()">Conectar</mat-chip>
 </mat-chip-list>

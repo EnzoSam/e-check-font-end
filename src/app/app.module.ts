@@ -11,11 +11,17 @@ import { DefaultErrorComponent } from './components/default-error/default-error.
 import { DashboardMenuComponent } from './components/dashboard-menu/dashboard-menu.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CheckEmitComponent } from './components/check-emit/check-emit.component';
-import { CheckSignComponent } from './components/check-sign/check-sign.component';
 import { ChecksEmitedsComponent } from './components/checks-emiteds/checks-emiteds.component';
 import { CheckListComponent } from './components/check-list/check-list.component';
 import { Web3Service } from './services/web3.service';
 import { AddressComponent } from './components/address/address.component';
+
+import { environment } from '../environments/environment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { CheckDetailComponent } from './components/check-detail/check-detail.component';
+import { FirestoreService } from './services/firestore.service';
+
 
 @NgModule({
   declarations: [
@@ -23,13 +29,15 @@ import { AddressComponent } from './components/address/address.component';
     DefaultErrorComponent,
     DashboardMenuComponent,
     CheckEmitComponent,
-    CheckSignComponent,
     ChecksEmitedsComponent,
     CheckListComponent,
-    AddressComponent
+    AddressComponent,
+    CheckDetailComponent
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
@@ -37,7 +45,7 @@ import { AddressComponent } from './components/address/address.component';
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [Web3Service],
+  providers: [Web3Service,FirestoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

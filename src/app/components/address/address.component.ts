@@ -25,4 +25,8 @@ export class AddressComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
   }
 
+  connect():void
+  {
+    this._web3Service.connect();
+  }
 }

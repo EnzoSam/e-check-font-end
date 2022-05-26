@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ICheck } from 'src/app/interfaces/icheck.interface';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
   selector: 'app-check-list',
@@ -7,20 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CheckListComponent implements OnInit {
 
-  public checks:any[];
-  displayedColumns: string[] = ['numero', 'beneficiario', 'total'];
+  public checks:ICheck[];
+  displayedColumns: string[] = ['number', 'recipient', 'amount'];
   expandedElement: any | null;
 
-  constructor() { 
+  constructor(private _fireStoreService:FirestoreService) { 
     this.checks = [];
-    this.checks.push({numero:1,beneficiario:'ffsadfsadfdsf', total:0.15});
   }
 
   ngOnInit(): void {
+  
+     this._fireStoreService.getChecks().subscribe((data:any)=>
+     {
+       this.checks = data;
+     });
   }
 
   getTotalChecks():number
   {
-    return this.checks.reduce((sum, c) => sum + c.total, 0);
+    return this.checks.reduce((sum, c) => sum + c.amount, 0);
   }
 }

@@ -1,0 +1,25 @@
+<div class="container">
+    <mat-card *ngIf="check">
+        <mat-card-title>Detalle del cheque</mat-card-title>
+        
+        <mat-card-content>
+            <p>Beneficiario: {{check.recipient}}</p>
+            <p>Cantidad: {{check.amount}}</p>
+            <p>Numero: {{check.number}}</p>
+            <p>Firma: {{check.signature}}</p>
+            
+        </mat-card-content>
+        <mat-divider inset></mat-divider>
+        <mat-card-actions>
+          <a [href]="'https://wa.me/?text=' + check.signature">
+            <mat-icon color="accent">whatsapp</mat-icon>
+          </a>
+          <mat-icon color="accent">email</mat-icon>
+          <mat-icon color="accent">file_copy</mat-icon>
+        </mat-card-actions>
+        <mat-card-footer>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+    
+    
