@@ -3,9 +3,11 @@ export const routesPaths = {
     emit: "emitir",
     accredit:"acreditados",
     emiteds:"emitidos",
-    detail:"detail"
+    detail:"detail",
+    portfolio:"portfolio"
   };
 
   export const routesParams = {    
-    detail_id:"id"
+    detail_id:"id",
+    checkType:"type"
   };

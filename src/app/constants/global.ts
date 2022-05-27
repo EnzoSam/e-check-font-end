@@ -3,5 +3,6 @@ export const Site = {
   };
 
 export const Contract = {
-    address: "0x423C7Dc1E9219e0D1327c56EfE9b341fd888c5Cc"
+    address: "0xe37b49fa6067595ed0079da2393c722116127494",
+    owner: "0xB9D1B86e46863E829C4D3262984aE7b380242F5D"
   };  

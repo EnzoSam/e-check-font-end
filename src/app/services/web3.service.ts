@@ -3,8 +3,9 @@ import Web3 from 'web3';
 import { Contract } from '../constants/global';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Check } from '../models/check.model';
+import { ICheck } from '../interfaces/icheck.interface';
 var abi = require('ethereumjs-abi');
-
+let contractAbi = require('./contractAbi.json');
 
 
 declare let window: any;
@@ -29,13 +30,12 @@ export class Web3Service {
 
   async connect()
   {
-    console.log('conecting...');
     if (typeof window.ethereum !== undefined) {
       this.web3 = new Web3(window.ethereum);
       this.handleIdChainChange();
     }
     else{
-      console.log('no esta metamask.');
+      alert('no esta metamask.');
     }
   }
 
@@ -76,7 +76,6 @@ export class Web3Service {
     window.ethereum.on('accountsChanged',(accounts:string[])=>
       {
         this.addressUser.next(accounts[0]);
-        console.log(this.addressUser.value);
       });
   }
 
@@ -86,7 +85,6 @@ export class Web3Service {
       (["address", "uint256", "uint256", "address"],
         [check.recipient, check.amount, check.number, Contract.address]).toString("hex");
 
-    console.log(hash);
     return hash;
   }
 
@@ -101,4 +99,30 @@ export class Web3Service {
       });
     }
   }
+
+  getCurrentAccountAddress():string
+  {
+    return this.addressUser.value;
+  }
+
+  async accreedit(_check:ICheck):Promise<any>
+  {
+    if(!this.addressUser.value)
+      return;
+    window.ethereum.request({method:'eth_requestAccounts'});
+    const contract = new this.web3.eth.Contract(contractAbi, Contract.address);
+    let trans:any = undefined;
+    let err:any = undefined;
+    await contract.methods.accreditCheck(_check.amount,_check.number,_check.signature)
+    .send({from:this.addressUser.value}, (error:any, transactionHash:any) =>
+    {
+      trans = transactionHash;
+      err = error;
+    });
+    if(err)
+      return Promise.reject(err);
+    else
+      return Promise.resolve(trans);
+  }
+
 }

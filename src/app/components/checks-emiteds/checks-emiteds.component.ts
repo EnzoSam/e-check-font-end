@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CheckViewType } from 'src/app/enums/checks.enum';
 
 @Component({
   selector: 'app-checks-emiteds',
@@ -7,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChecksEmitedsComponent implements OnInit {
 
+  viewType = CheckViewType.Emmited;
   constructor() { }
 
   ngOnInit(): void {

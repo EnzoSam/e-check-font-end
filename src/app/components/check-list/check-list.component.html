@@ -1,5 +1,5 @@
     <div class="container">
-    <table  mat-table
+    <table *ngIf="checks"  mat-table
            [dataSource]="checks" multiTemplateDataRows
            class="mat-elevation-z8">
       <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
@@ -19,8 +19,8 @@
           <div class="example-element-detail"
                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
             <div >
-                <button mat-raised-button>Ediar</button>
-                <button mat-raised-button>Eliminar</button>
+              <button *ngIf="viewType===3"  color="accent" mat-raised-button (click)="accredit()">Cobrar</button>  
+              <button  *ngIf="viewType===1" color="accent" mat-raised-button>Eliminar</button>                
             </div>
           </div>
         </td>

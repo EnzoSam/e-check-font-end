@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
+import { states } from '../constants/checks';
 import { ICheck } from '../interfaces/icheck.interface';
 import { Check } from '../models/check.model';
 
@@ -12,9 +13,9 @@ export class FirestoreService {
   constructor(private firestore: AngularFirestore) {
   }
 
-  createNewCheck():ICheck
+  async createNewCheck():Promise<ICheck>
   {
-    return {
+    let icheck:ICheck = {
       id:'',
       number: 0,
       amount:0,
@@ -22,20 +23,32 @@ export class FirestoreService {
       signer: '',
       recipient: '',
       state: ''};
+
+    await this.getMaxCheckNumber().then((max:number)=>
+    {
+      icheck.number = max + 1;
+    });
+
+    return Promise.resolve(icheck);
   }
 
-  insertCheck(check:ICheck) {
-    check.id = this.firestore.createId();
-    console.log(check);
-    return this.firestore.collection<ICheck>('Checks').add(check);
+  async insertCheck(check:ICheck) {
+    check.id = await this.firestore.createId();
+    check.state = states.pending;
+    return this.firestore.collection<ICheck>('Checks').doc(check.id).set(check);
   }
 
-  getChecks() {
-    return this.firestore.collection<ICheck>('Checks').valueChanges();
+  getEmitedCheck(_addressSigner:any) {
+    return this.firestore.collection<ICheck>('Checks').ref.where('signer','==',_addressSigner).get();
+  }
+
+  getPorfolioChecks(_addressRecipient:any) {
+    return this.firestore.collection<ICheck>('Checks').ref
+    .orderBy('number','desc').where('recipient','==',_addressRecipient).get();
   }
 
   updateCheck(check:ICheck){
-    this.firestore.doc('Checks/' + check.id).update(check);
+    this.firestore.collection<ICheck>('Checks').doc(check.id).update({state:check.state});
   }
 
   getCheck(id:any){
@@ -44,5 +57,20 @@ export class FirestoreService {
 
   deleteCheck(check:ICheck) {
     this.firestore.doc('Checks/' + check.id).delete();
+  }
+
+  async getMaxCheckNumber():Promise<number>
+  {
+    let max:number = 0;
+    await this.firestore.collection<ICheck>('Checks').ref
+    .orderBy('number', 'desc').limit(1).get().then((value:any)=>
+    {
+      if(value && value.docs && value.docs.length > 0)
+      {
+        max = +value.docs[0].data().number;        
+      }
+    })
+
+    return Promise.resolve(max);
   }
 }

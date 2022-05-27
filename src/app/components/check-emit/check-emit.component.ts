@@ -12,12 +12,16 @@ import { ICheck } from 'src/app/interfaces/icheck.interface';
 })
 export class CheckEmitComponent implements OnInit {
 
-  check: ICheck;
+  check?: ICheck;
 
   constructor(private _web3Service: Web3Service,
     private _firestoreService: FirestoreService,
     private _route: Router) {
-    this.check = _firestoreService.createNewCheck();
+      this.check = undefined;
+     _firestoreService.createNewCheck().then((_check:ICheck)=>
+    {
+      this.check = _check;
+    });
   }
 
   ngOnInit(): void {
@@ -31,7 +35,8 @@ export class CheckEmitComponent implements OnInit {
 
       if (this.check.signature) {
         this._firestoreService.insertCheck(this.check).then((check: any) => {
-          this._route.navigate([routesPaths.dashboard + '/' + routesPaths.detail, check.id])
+          console.log(check);
+          this._route.navigate([routesPaths.dashboard + '/' + routesPaths.detail, this.check?.id])
         })
           .catch((reason: any) => {
             alert(reason);

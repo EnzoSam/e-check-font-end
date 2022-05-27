@@ -21,6 +21,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { CheckDetailComponent } from './components/check-detail/check-detail.component';
 import { FirestoreService } from './services/firestore.service';
+import { ChecksPorfolioComponent } from './components/checks-porfolio/checks-porfolio.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { FirestoreService } from './services/firestore.service';
     ChecksEmitedsComponent,
     CheckListComponent,
     AddressComponent,
-    CheckDetailComponent
+    CheckDetailComponent,
+    ChecksPorfolioComponent
   ],
   imports: [
     BrowserModule,
