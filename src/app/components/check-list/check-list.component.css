@@ -13,11 +13,13 @@ table {
   }
   
   tr.example-element-row:not(.example-expanded-row):hover {
-    background: whitesmoke;
+    
+    border: 2px solid  #69F0AE;
+    font-weight: bolder;
   }
   
   tr.example-element-row:not(.example-expanded-row):active {
-    background: #efefef;
+    font-weight: normal;
   }
   
   .example-element-row td {

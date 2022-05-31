@@ -39,7 +39,8 @@ export class FirestoreService {
   }
 
   getEmitedCheck(_addressSigner:any) {
-    return this.firestore.collection<ICheck>('Checks').ref.where('signer','==',_addressSigner).get();
+    return this.firestore.collection<ICheck>('Checks').ref.orderBy('number','desc')
+    .where('signer','==',_addressSigner).get();
   }
 
   getPorfolioChecks(_addressRecipient:any) {

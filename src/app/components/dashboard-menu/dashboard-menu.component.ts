@@ -34,7 +34,6 @@ export class DashboardMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.suscription = this._web3Service.onAdressChange().subscribe
       ((value: string) => {
-        console.log(value + '  ' + Contract.owner);    
         this.isEmmiter = ((value + '').toLowerCase() === Contract.owner.toLowerCase());
       }
       );

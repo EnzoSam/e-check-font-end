@@ -15,10 +15,6 @@ declare let window: any;
 })
 export class Web3Service {
 
-  /*web3: any;
-  defaultAccount:any;
-  web3Provider:any;*/
-
   private web3: any;
   private chainIds:string[]= ['0x4'];
   private addressUser:any=new BehaviorSubject<string>('');
@@ -30,12 +26,12 @@ export class Web3Service {
 
   async connect()
   {
-    if (typeof window.ethereum !== undefined) {
+    if (typeof window.ethereum !== 'undefined') {
       this.web3 = new Web3(window.ethereum);
       this.handleIdChainChange();
     }
     else{
-      alert('no esta metamask.');
+      alert('Debes instalar metamask.');
     }
   }
 
@@ -52,14 +48,14 @@ export class Web3Service {
       this.handleAccountsChange();
     }
     else{
-      //red no contemplada
+      alert('Solo disponible para la red Rinkeby (Ethereum).');
     }
 
     window.ethereum.on('chainChanged',(res:string)=>
     {
       if(!this.chainIds.includes(res))
       {
-        //red no contemplada
+        alert('Solo disponible para la red Rinkeby (Ethereum).');
       }
       else{
         this.handleAccountsChange();
@@ -71,7 +67,6 @@ export class Web3Service {
   {
     const accounts :string[] = await window.ethereum.request({method:'eth_requestAccounts'});
     this.addressUser.next(accounts[0]);
-    console.log(this.addressUser.value);
 
     window.ethereum.on('accountsChanged',(accounts:string[])=>
       {

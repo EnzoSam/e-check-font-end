@@ -51,17 +51,17 @@ export class CheckListComponent implements OnInit,OnDestroy {
 
   loadChecks():void
   {
-    this.checks = [];
     let address = this._web3Service.getCurrentAccountAddress();
 
     if (this.viewType === CheckViewType.Emmited) {
       this._fireStoreService.getEmitedCheck(address).then((snapshot: any) => {
-        
+        this.checks = [];
         snapshot.forEach((doc: { data: () => ICheck; }) => {
           this.checks.push(doc.data());
         });
 
       }).catch((reason: any) => {
+        console.log(reason);
         alert(reason);
       });
     }
@@ -80,7 +80,7 @@ export class CheckListComponent implements OnInit,OnDestroy {
   }
 
   getTotalChecks(): number {
-    return this.checks.reduce((sum, c) => sum + c.amount, 0);
+    return this.checks.reduce((sum, c) => sum + parseInt(c.amount), 0);
   }
 
   accredit():void{
